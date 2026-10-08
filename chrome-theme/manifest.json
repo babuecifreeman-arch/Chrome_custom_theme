@@ -1,0 +1,106 @@
+{
+  "manifest_version": 3,
+  "name": "Louna Gothic Punk — Ink Splatter",
+  "version": "1.18.0",
+  "description": "Ink Splatter: более мягкие красные и белые кляксы с усиленными потёками краски и более заметной активной вкладкой.",
+  "theme": {
+    "colors": {
+      "frame": [
+        11,
+        11,
+        14
+      ],
+      "frame_inactive": [
+        5,
+        5,
+        7
+      ],
+      "background_tab": [
+        18,
+        18,
+        22
+      ],
+      "background_tab_inactive": [
+        7,
+        7,
+        9
+      ],
+      "toolbar": [
+        27,
+        27,
+        31
+      ],
+      "toolbar_text": [
+        247,
+        247,
+        248
+      ],
+      "toolbar_button_icon": [
+        232,
+        232,
+        236
+      ],
+      "tab_text": [
+        255,
+        255,
+        255
+      ],
+      "tab_background_text": [
+        205,
+        205,
+        212
+      ],
+      "tab_background_text_inactive": [
+        122,
+        122,
+        132
+      ],
+      "bookmark_text": [
+        222,
+        222,
+        225
+      ],
+      "omnibox_background": [
+        20,
+        20,
+        24
+      ],
+      "omnibox_text": [
+        239,
+        239,
+        241
+      ],
+      "button_background": [
+        36,
+        36,
+        42
+      ],
+      "ntp_background": [
+        6,
+        6,
+        7
+      ],
+      "ntp_text": [
+        232,
+        232,
+        234
+      ],
+      "ntp_link": [
+        115,
+        18,
+        29
+      ],
+      "ntp_header": [
+        232,
+        232,
+        234
+      ]
+    },
+    "images": {
+      "theme_frame": "images/theme_frame.png",
+      "theme_frame_inactive": "images/theme_frame_inactive.png",
+      "theme_toolbar": "images/theme_toolbar.png",
+      "theme_tab_background": "images/theme_tab_background.png"
+    }
+  }
+}

@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Новая вкладка</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/newtab-favicon.png">
+</head>
+<body>
+  <div id="background" class="background" aria-hidden="true"></div>
+
+  <div id="topZone" class="top-zone">
+    <nav id="bookmarksBar" class="bookmarks-bar" aria-label="Панель закладок"></nav>
+  </div>
+
+  <div id="bottomZone" class="bottom-zone">
+    <nav id="shortcutsBar" class="shortcuts-bar" aria-label="Быстрые ссылки"></nav>
+    <div class="bottom-actions" aria-label="Управление новой вкладкой">
+      <button id="prevCarouselImage" class="bottom-control carousel-nav-button carousel-prev-button" type="button" aria-label="Предыдущее изображение карусели" title="Предыдущий фон" hidden>‹</button>
+      <button id="nextCarouselImage" class="bottom-control carousel-nav-button carousel-next-button" type="button" aria-label="Следующее изображение карусели" title="Следующий фон" hidden>›</button>
+      <button id="settingsButton" class="bottom-control settings-gear" type="button" aria-label="Открыть настройки" title="Настройки">⚙</button>
+    </div>
+  </div>
+
+  <div id="settingsOverlay" class="settings-overlay" hidden>
+    <section class="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <header class="settings-header">
+        <div>
+          <p class="eyebrow">LOUNA / GOTHIC PUNK</p>
+          <h1 id="settingsTitle">Настройки новой вкладки</h1>
+        </div>
+        <button id="closeSettings" class="icon-button" type="button" aria-label="Закрыть настройки">×</button>
+      </header>
+
+      <div class="settings-tabs" role="tablist" aria-label="Разделы настроек">
+        <button class="tab-button is-active" type="button" role="tab" aria-selected="true" data-tab="backgroundTab">Фон</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="appearanceTab">Оформление</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="shortcutsTab">Ярлыки</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="bookmarksTab">Закладки</button>
+      </div>
+
+      <div class="settings-content">
+        <section id="backgroundTab" class="tab-panel is-active" role="tabpanel">
+          <div class="setting-card">
+            <h2>Фоновое изображение</h2>
+            <p>Исходное изображение Louna используется по умолчанию. Можно выбрать своё изображение с компьютера.</p>
+            <label class="file-picker">
+              <span>Выбрать изображение</span>
+              <input id="backgroundFile" type="file" accept="image/*">
+            </label>
+            <button id="resetBackground" class="secondary-button" type="button">Вернуть исходный фон</button>
+          </div>
+
+          <div class="setting-card carousel-card">
+            <div class="carousel-heading">
+              <div>
+                <h2>Карусель фоновых изображений</h2>
+                <p class="hint">Выбери несколько изображений — они будут последовательно сменяться через заданный интервал.</p>
+              </div>
+              <label class="toggle-field">
+                <input id="backgroundCarouselEnabled" type="checkbox">
+                <span class="toggle-track" aria-hidden="true"></span>
+                <span>Включить</span>
+              </label>
+            </div>
+
+            <div class="carousel-controls">
+              <label class="file-picker">
+                <span>Добавить изображения</span>
+                <input id="backgroundCarouselFiles" type="file" accept="image/*" multiple>
+              </label>
+              <label class="field carousel-interval-field">
+                <span>Интервал смены</span>
+                <div class="interval-controls">
+                  <input id="backgroundCarouselInterval" type="number" min="1" max="999" step="1" value="5">
+                  <select id="backgroundCarouselUnit">
+                    <option value="seconds">секунд</option>
+                    <option value="minutes" selected>минут</option>
+                    <option value="hours">часов</option>
+                  </select>
+                </div>
+              </label>
+              <button id="clearBackgroundCarousel" class="secondary-button" type="button">Очистить карусель</button>
+            </div>
+            <p id="backgroundCarouselError" class="error-message" role="status" aria-live="polite"></p>
+            <div id="backgroundCarouselList" class="carousel-image-list"></div>
+            <p id="emptyBackgroundCarousel" class="empty-state">Карусель пока пуста. Добавь два или больше изображений.</p>
+          </div>
+
+          <div class="setting-card grid-two">
+            <label class="field">
+              <span>Способ отображения</span>
+              <select id="backgroundMode">
+                <option value="cover">Cover — заполнить экран</option>
+                <option value="contain">Contain — показать полностью</option>
+                <option value="stretch">Stretch — растянуть</option>
+                <option value="center">Center — оригинальный размер</option>
+                <option value="fit-width">Fit Width — по ширине</option>
+                <option value="manual">Manual — ручной размер и позиция</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Позиция изображения</span>
+              <select id="backgroundPosition">
+                <option value="center center">По центру</option>
+                <option value="center top">Сверху по центру</option>
+                <option value="center bottom">Снизу по центру</option>
+                <option value="left center">Слева</option>
+                <option value="right center">Справа</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="setting-card" id="manualBackgroundCard">
+            <h2>Ручная настройка фона</h2>
+            <p class="hint">Работает в режиме <strong>Manual</strong>. Размер задаётся относительно ширины окна, позиция — по горизонтали и вертикали.</p>
+            <div class="grid-two manual-background-grid">
+              <label class="field range-field">
+                <span>Размер фона: <strong id="backgroundManualSizeValue">100%</strong></span>
+                <input id="backgroundManualSize" type="range" min="25" max="300" step="1" value="100">
+              </label>
+              <label class="field range-field">
+                <span>Позиция X: <strong id="backgroundManualXValue">50%</strong></span>
+                <input id="backgroundManualX" type="range" min="0" max="100" step="1" value="50">
+              </label>
+              <label class="field range-field">
+                <span>Позиция Y: <strong id="backgroundManualYValue">50%</strong></span>
+                <input id="backgroundManualY" type="range" min="0" max="100" step="1" value="50">
+              </label>
+              <div class="field manual-background-note">
+                <span>Быстрый сброс</span>
+                <button id="resetManualBackground" class="secondary-button" type="button">100% / центр</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="appearanceTab" class="tab-panel" role="tabpanel">
+          <div class="setting-card grid-two">
+            <label class="field">
+              <span>Акцентный цвет</span>
+              <input id="accentColor" type="color" value="#6b0d18">
+            </label>
+            <label class="field">
+              <span>Шрифт интерфейса</span>
+              <select id="fontFamily">
+                <option value="modern">Modern Dark — Segoe UI</option>
+                <option value="interlike">Clean — Arial</option>
+                <option value="verdana">Readable — Verdana</option>
+                <option value="tahoma">Compact — Tahoma</option>
+                <option value="century">Century Gothic</option>
+                <option value="franklin">Franklin Gothic</option>
+                <option value="condensed">Condensed — Arial Narrow</option>
+                <option value="rock">Rock — Trebuchet MS</option>
+                <option value="gothic">Gothic — Georgia</option>
+                <option value="palatino">Dark Serif — Palatino</option>
+                <option value="garamond">Classic — Garamond</option>
+                <option value="mono">Industrial — Courier New</option>
+                <option value="console">Terminal — Lucida Console</option>
+                <option value="heavy">Heavy — Impact</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="setting-card grid-two">
+            <label class="field range-field">
+              <span>Размер шрифта: <strong id="fontSizeValue">13 px</strong></span>
+              <input id="fontSize" type="range" min="10" max="20" step="1" value="13">
+            </label>
+            <label class="field range-field">
+              <span>Интервал между буквами: <strong id="letterSpacingValue">0 px</strong></span>
+              <input id="letterSpacing" type="range" min="-1" max="4" step="0.25" value="0">
+            </label>
+          </div>
+
+          <div class="setting-card">
+            <label class="field range-field">
+              <span>Прозрачность панели закладок: <strong id="panelOpacityValue">40%</strong></span>
+              <input id="panelOpacity" type="range" min="0" max="100" step="5" value="40">
+            </label>
+            <p class="hint">Нижняя панель ярлыков остаётся без общей подложки. Прозрачность применяется к верхней панели закладок и выпадающим меню.</p>
+          </div>
+
+          <div class="setting-card grid-two">
+            <label class="field range-field">
+              <span>Толщина рамки закладок: <strong id="bookmarkBorderWidthValue">1 px</strong></span>
+              <input id="bookmarkBorderWidth" type="range" min="1" max="4" step="1" value="1">
+            </label>
+            <label class="field">
+              <span>Цвет рамки закладок</span>
+              <input id="bookmarkBorderColor" type="color" value="#ffffff">
+            </label>
+          </div>
+
+          <div class="setting-card grid-two">
+            <label class="field range-field">
+              <span>Свечение закладок при hover: <strong id="bookmarkHoverGlowValue">70%</strong></span>
+              <input id="bookmarkHoverGlow" type="range" min="0" max="100" step="5" value="70">
+            </label>
+            <label class="field range-field">
+              <span>Свечение ярлыков при hover: <strong id="shortcutHoverGlowValue">80%</strong></span>
+              <input id="shortcutHoverGlow" type="range" min="0" max="100" step="5" value="80">
+            </label>
+          </div>
+
+          <div class="setting-card grid-two">
+            <label class="field">
+              <span>Цвет свечения hover</span>
+              <input id="hoverGlowColor" type="color" value="#c91e3c">
+            </label>
+            <label class="field">
+              <span>Цвет рамки ярлыков</span>
+              <input id="shortcutBorderColor" type="color" value="#ffffff">
+            </label>
+          </div>
+
+          <div class="setting-card grid-two">
+            <label class="field range-field">
+              <span>Размер иконок закладок: <strong id="bookmarkIconSizeValue">18 px</strong></span>
+              <input id="bookmarkIconSize" type="range" min="14" max="36" step="1" value="18">
+            </label>
+            <label class="field range-field">
+              <span>Размер иконок ярлыков: <strong id="shortcutIconSizeValue">23 px</strong></span>
+              <input id="shortcutIconSize" type="range" min="14" max="64" step="1" value="23">
+            </label>
+          </div>
+
+          <div class="setting-card">
+            <label class="field range-field">
+              <span>Отступы элементов: <strong id="elementPaddingValue">9 px</strong></span>
+              <input id="elementPadding" type="range" min="4" max="16" step="1" value="9">
+            </label>
+          </div>
+
+          <div class="setting-card grid-two">
+            <label class="field range-field">
+              <span>Размер ярлыков: <strong id="shortcutTileSizeValue">54 px</strong></span>
+              <input id="shortcutTileSize" type="range" min="44" max="96" step="2" value="54">
+            </label>
+            <label class="field range-field">
+              <span>Толщина контура ярлыков: <strong id="shortcutBorderWidthValue">1 px</strong></span>
+              <input id="shortcutBorderWidth" type="range" min="1" max="5" step="1" value="1">
+            </label>
+          </div>
+
+          <div class="setting-card preview-card appearance-preview-card">
+            <span class="preview-label">Предпросмотр элементов</span>
+            <div class="appearance-preview-row" aria-hidden="true">
+              <div class="shortcut-tile preview-tile"><span class="preview-favicon">L</span></div>
+              <div class="bookmark-link preview-bookmark"><span class="bookmark-folder-icon"></span><span class="bookmark-title">Gothic Folder</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="shortcutsTab" class="tab-panel" role="tabpanel">
+          <div class="setting-card">
+            <h2>Управление ярлыками</h2>
+            <p>Добавляй сайты, меняй URL и порядок. На самой новой вкладке отображается только favicon.</p>
+            <div class="add-shortcut-form">
+              <label class="field">
+                <span>Название</span>
+                <input id="newShortcutName" type="text" maxlength="50" placeholder="Например, GitHub">
+              </label>
+              <label class="field grow">
+                <span>URL</span>
+                <input id="newShortcutUrl" type="text" inputmode="url" placeholder="https://github.com">
+              </label>
+              <button id="addShortcut" class="primary-button" type="button">Добавить</button>
+            </div>
+            <p id="shortcutError" class="error-message" role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="setting-card">
+            <div class="list-heading">
+              <h2>Текущие ярлыки</h2>
+              <span>Перетаскивай строки для изменения порядка</span>
+            </div>
+            <div id="shortcutList" class="shortcut-list"></div>
+            <p id="emptyShortcuts" class="empty-state">Ярлыков пока нет. Добавь первый сайт выше.</p>
+          </div>
+        </section>
+
+        <section id="bookmarksTab" class="tab-panel" role="tabpanel">
+          <div class="setting-card">
+            <h2>Добавить закладку</h2>
+            <p>Закладки здесь — это реальные закладки Chrome. Изменения сразу появляются в верхней панели.</p>
+            <div class="bookmark-add-form">
+              <label class="field bookmark-name-field">
+                <span>Название</span>
+                <input id="newBookmarkName" type="text" maxlength="120" placeholder="Например, YouTube">
+              </label>
+              <label class="field grow">
+                <span>URL</span>
+                <input id="newBookmarkUrl" type="text" inputmode="url" placeholder="https://youtube.com">
+              </label>
+              <label class="field bookmark-parent-field">
+                <span>Папка</span>
+                <select id="newBookmarkParent"></select>
+              </label>
+              <button id="addBookmark" class="primary-button" type="button">Добавить</button>
+            </div>
+            <p id="bookmarkError" class="error-message" role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="setting-card">
+            <h2>Добавить папку</h2>
+            <div class="bookmark-folder-add-form">
+              <label class="field grow">
+                <span>Название папки</span>
+                <input id="newBookmarkFolderName" type="text" maxlength="120" placeholder="Например, Работа">
+              </label>
+              <label class="field bookmark-parent-field">
+                <span>Расположение</span>
+                <select id="newBookmarkFolderParent"></select>
+              </label>
+              <button id="addBookmarkFolder" class="primary-button" type="button">Создать папку</button>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <div class="list-heading">
+              <h2>Панель закладок Chrome</h2>
+              <span>Редактирование + drag-and-drop на верхней панели</span>
+            </div>
+            <p class="hint">Захвати закладку или папку мышью на верхней панели: можно менять порядок, переносить элементы между папками и вытаскивать их обратно на панель.</p>
+            <div id="bookmarkEditorTree" class="bookmark-editor-tree"></div>
+            <p id="emptyBookmarksEditor" class="empty-state">Панель закладок пока пуста.</p>
+          </div>
+        </section>
+      </div>
+
+      <footer class="settings-footer">
+        <span id="saveStatus">Настройки сохраняются автоматически</span>
+        <button id="closeSettingsFooter" class="primary-button" type="button">Готово</button>
+      </footer>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

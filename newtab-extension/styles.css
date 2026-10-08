@@ -1,0 +1,1858 @@
+:root {
+  --accent: #6b0d18;
+  --accent-rgb: 107, 13, 24;
+  --panel-alpha: 0.40;
+  --ui-font: "Segoe UI", Arial, sans-serif;
+  --text: #f1f1f3;
+  --muted: #a7a7ad;
+  --surface: #151518;
+  --surface-2: #1d1d21;
+  --border: rgba(255, 255, 255, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #050506;
+  color: var(--text);
+  font-family: var(--ui-font);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+a,
+select,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-color: #050506;
+  background-image: url("assets/default-background.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+
+.top-zone {
+  position: fixed;
+  z-index: 12;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 126px;
+}
+
+.bookmarks-bar {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translate(-50%, -12px);
+  width: fit-content;
+  max-width: min(94vw, 1800px);
+  min-height: 48px;
+  padding: 7px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: center;
+  justify-content: center;
+  column-gap: 4px;
+  row-gap: 6px;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(8, 8, 10, var(--panel-alpha));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.bookmarks-bar:empty {
+  display: none;
+}
+
+.top-zone:hover .bookmarks-bar,
+.bookmarks-bar:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.bookmark-item,
+.bookmark-folder {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.bookmark-link,
+.bookmark-folder-button {
+  height: 34px;
+  max-width: 210px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: #f2f2f4;
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.bookmark-link:hover,
+.bookmark-link:focus-visible,
+.bookmark-folder:hover > .bookmark-folder-button,
+.bookmark-folder-button:focus-visible {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.45);
+  transform: translateY(-1px);
+}
+
+.bookmark-favicon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  display: block;
+  object-fit: contain;
+}
+
+.bookmark-favicon.favicon-fallback {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  font-size: 10px;
+}
+
+.bookmark-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.bookmark-folder-icon {
+  position: relative;
+  width: 17px;
+  height: 12px;
+  flex: 0 0 17px;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.bookmark-folder-icon::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: -5px;
+  width: 8px;
+  height: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-bottom: 0;
+  border-radius: 2px 2px 0 0;
+  background: rgba(8, 8, 10, 0.84);
+}
+
+.bookmark-chevron {
+  margin-left: 2px;
+  color: #a9a9af;
+  font-size: 10px;
+}
+
+.bookmark-menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 230px;
+  max-width: 360px;
+  padding: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(12, 12, 14, 0.94);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55), 0 0 24px rgba(var(--accent-rgb), 0.14);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-5px);
+  transition: opacity 130ms ease, transform 130ms ease, visibility 130ms ease;
+}
+
+.bookmark-folder:hover > .bookmark-menu,
+.bookmark-folder:focus-within > .bookmark-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.bookmark-menu .bookmark-link,
+.bookmark-menu .bookmark-folder-button {
+  width: 100%;
+  max-width: none;
+  justify-content: flex-start;
+}
+
+.bookmark-menu .bookmark-folder,
+.bookmark-menu .bookmark-item {
+  width: 100%;
+}
+
+.bookmark-menu .bookmark-folder > .bookmark-menu {
+  top: -7px;
+  left: calc(100% + 8px);
+}
+
+.bookmark-menu .bookmark-title {
+  flex: 1;
+}
+
+.bookmark-menu-empty {
+  padding: 8px 10px;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.bottom-zone {
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 150px;
+}
+
+.shortcuts-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translate(-50%, 14px);
+  min-height: 72px;
+  max-width: min(82vw, 1500px);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
+  background: rgba(8, 8, 10, var(--panel-alpha));
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.shortcuts-bar:empty {
+  display: none;
+}
+
+.bottom-zone:hover .shortcuts-bar,
+.shortcuts-bar:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.shortcut-tile {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  border-radius: 11px;
+  outline: none;
+  transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.shortcut-tile:hover,
+.shortcut-tile:focus-visible {
+  transform: translateY(-4px) scale(1.04);
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.58), 0 0 20px rgba(var(--accent-rgb), 0.80);
+}
+
+.shortcut-tile.dragging {
+  opacity: 0.45;
+}
+
+.shortcut-favicon {
+  width: 30px;
+  height: 30px;
+  display: block;
+  object-fit: contain;
+}
+
+.favicon-fallback,
+.preview-favicon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.settings-gear {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 12px;
+  background: rgba(8, 8, 10, var(--panel-alpha));
+  color: #fff;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 180ms ease, transform 180ms ease, box-shadow 150ms ease;
+  backdrop-filter: blur(8px);
+}
+
+.bottom-zone:hover .settings-gear,
+.settings-gear:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.settings-gear:hover,
+.settings-gear:focus-visible {
+  box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.78);
+  outline: none;
+}
+
+.settings-overlay {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(12px);
+}
+
+.settings-overlay[hidden] {
+  display: none;
+}
+
+.settings-dialog {
+  width: min(980px, 96vw);
+  max-height: min(820px, 92vh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  background: linear-gradient(150deg, rgba(26, 26, 29, 0.98), rgba(10, 10, 12, 0.98));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.64), 0 0 44px rgba(var(--accent-rgb), 0.20);
+}
+
+.settings-header,
+.settings-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+}
+
+.settings-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 22px;
+  font-weight: 650;
+}
+
+h2 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.setting-card > p,
+.hint,
+.list-heading span {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.settings-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 24px 0;
+}
+
+.tab-button {
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.tab-button.is-active {
+  color: #fff;
+  border-bottom-color: var(--accent);
+}
+
+.settings-content {
+  overflow: auto;
+  padding: 18px 24px 24px;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.is-active {
+  display: block;
+}
+
+.setting-card {
+  margin-bottom: 14px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.grid-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  color: #dedee1;
+  font-size: 13px;
+}
+
+.field.grow {
+  flex: 1;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  background: #101012;
+  color: #f5f5f6;
+}
+
+input[type="text"]:focus,
+select:focus,
+input[type="color"]:focus-visible,
+input[type="range"]:focus-visible {
+  border-color: rgba(var(--accent-rgb), 0.9);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+}
+
+input[type="color"] {
+  width: 100%;
+  height: 42px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #101012;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.range-field {
+  gap: 12px;
+}
+
+.file-picker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  margin-right: 8px;
+  padding: 0 14px;
+  border: 1px solid rgba(var(--accent-rgb), 0.84);
+  border-radius: 10px;
+  background: rgba(var(--accent-rgb), 0.18);
+  color: #fff;
+  cursor: pointer;
+}
+
+.file-picker input {
+  display: none;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 40px;
+  padding: 0 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.primary-button {
+  border: 1px solid rgba(var(--accent-rgb), 0.95);
+  background: var(--accent);
+}
+
+.secondary-button {
+  border: 1px solid var(--border);
+  background: transparent;
+}
+
+.primary-button:hover,
+.file-picker:hover {
+  filter: brightness(1.15);
+}
+
+.add-shortcut-form {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+}
+
+.add-shortcut-form > .field:first-child {
+  width: 190px;
+}
+
+.shortcut-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shortcut-row {
+  display: grid;
+  grid-template-columns: 34px 34px minmax(130px, 0.7fr) minmax(220px, 1.4fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.shortcut-row.dragging {
+  opacity: 0.45;
+  border-color: rgba(var(--accent-rgb), 0.85);
+}
+
+.drag-handle {
+  color: #8f8f95;
+  text-align: center;
+  cursor: grab;
+  user-select: none;
+  font-size: 18px;
+}
+
+.row-favicon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.row-input {
+  height: 36px !important;
+}
+
+.delete-button {
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  background: transparent;
+  color: #d7d7da;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  border-color: rgba(var(--accent-rgb), 0.85);
+  color: #fff;
+}
+
+.list-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.list-heading h2 {
+  margin: 0;
+}
+
+.list-heading span {
+  font-size: 12px;
+}
+
+.empty-state {
+  margin: 12px 0 0;
+  padding: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.error-message {
+  min-height: 18px;
+  margin: 10px 0 0;
+  color: #ff9aa4;
+  font-size: 12px;
+}
+
+.preview-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.preview-label {
+  color: var(--muted);
+}
+
+.preview-tile:hover {
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .grid-two {
+    grid-template-columns: 1fr;
+  }
+
+  .add-shortcut-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .add-shortcut-form > .field:first-child {
+    width: auto;
+  }
+
+  .shortcut-row {
+    grid-template-columns: 28px 30px 1fr auto;
+  }
+
+  .shortcut-row .url-input {
+    grid-column: 3 / 5;
+  }
+}
+
+
+/* Редактор реальной панели закладок Chrome */
+.bookmark-add-form,
+.bookmark-folder-add-form {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+}
+
+.bookmark-name-field {
+  width: 190px;
+}
+
+.bookmark-parent-field {
+  width: 220px;
+}
+
+.bookmark-editor-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.bookmark-editor-row {
+  display: grid;
+  grid-template-columns: 34px minmax(150px, 0.75fr) 78px minmax(220px, 1.35fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 9px 9px 9px calc(9px + (var(--bookmark-depth, 0) * 22px));
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.bookmark-editor-row.is-folder {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.bookmark-editor-icon {
+  width: 30px;
+  min-width: 30px;
+  display: grid;
+  place-items: center;
+}
+
+.bookmark-editor-icon .bookmark-folder-icon {
+  transform: scale(1.08);
+}
+
+.bookmark-type-label,
+.bookmark-folder-summary {
+  min-width: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.bookmark-folder-summary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bookmark-title-input,
+.bookmark-url-input {
+  min-width: 0;
+}
+
+/* У панели закладок фон теперь всегда охватывает все перенесённые строки. */
+.bookmarks-bar {
+  box-sizing: border-box;
+  height: auto;
+  max-height: none;
+}
+
+@media (max-width: 900px) {
+  .settings-tabs {
+    overflow-x: auto;
+  }
+
+  .bookmark-add-form,
+  .bookmark-folder-add-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .bookmark-name-field,
+  .bookmark-parent-field {
+    width: auto;
+  }
+
+  .bookmark-editor-row {
+    grid-template-columns: 30px minmax(130px, 1fr) auto;
+  }
+
+  .bookmark-editor-row .bookmark-type-label {
+    display: none;
+  }
+
+  .bookmark-editor-row .bookmark-url-input,
+  .bookmark-editor-row .bookmark-folder-summary {
+    grid-column: 2 / 4;
+  }
+}
+
+
+/* v1.3 refinements */
+.shortcuts-bar {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.bookmark-link,
+.bookmark-folder-button {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.025);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.bookmark-link:hover,
+.bookmark-link:focus-visible,
+.bookmark-folder:hover > .bookmark-folder-button,
+.bookmark-folder-button:focus-visible {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.34), 0 0 16px rgba(var(--accent-rgb), 0.45), inset 0 0 0 1px rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.icon-button:hover,
+.icon-button:focus-visible {
+  border-color: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.5);
+  outline: none;
+}
+
+#closeSettings {
+  font-size: 28px;
+}
+
+.top-zone {
+  height: 220px;
+}
+
+/* ===== v1.4: bookmark scrolling, gothic folder icon, advanced appearance controls ===== */
+:root {
+  --theme-font-size: 13px;
+  --letter-spacing: 0px;
+  --bookmark-border-width: 1px;
+  --hover-glow-alpha: 0.425;
+  --hover-glow-blur: 16px;
+  --bookmark-icon-size: 18px;
+  --shortcut-icon-size: 23px;
+  --element-padding: 9px;
+  --bookmark-menu-visible-rows: 8;
+  --bookmark-row-height: 36px;
+}
+
+.bookmarks-bar,
+.bookmark-menu,
+.settings-dialog {
+  font-family: var(--ui-font);
+}
+
+.bookmark-title,
+.bookmark-menu-empty,
+.bookmark-type-label,
+.bookmark-folder-summary,
+.settings-dialog .field,
+.settings-dialog .hint,
+.settings-dialog .list-heading span,
+.settings-dialog input,
+.settings-dialog select,
+.settings-dialog button:not(.icon-button) {
+  font-size: var(--theme-font-size);
+  letter-spacing: var(--letter-spacing);
+}
+
+.settings-dialog {
+  letter-spacing: var(--letter-spacing);
+}
+
+.bookmark-link,
+.bookmark-folder-button {
+  height: 34px;
+  min-height: 34px;
+  padding-left: var(--element-padding);
+  padding-right: var(--element-padding);
+  border-width: var(--bookmark-border-width);
+  border-style: solid;
+  gap: max(5px, calc(var(--element-padding) - 2px));
+}
+
+.bookmark-link:hover,
+.bookmark-link:focus-visible,
+.bookmark-folder:hover > .bookmark-folder-button,
+.bookmark-folder-button:focus-visible {
+  box-shadow:
+    0 0 0 1px rgba(var(--accent-rgb), calc(var(--hover-glow-alpha) * 0.65)),
+    0 0 var(--hover-glow-blur) rgba(var(--accent-rgb), var(--hover-glow-alpha)),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.bookmark-favicon,
+.bookmark-favicon.favicon-fallback,
+.row-favicon {
+  width: var(--bookmark-icon-size);
+  height: var(--bookmark-icon-size);
+  flex-basis: var(--bookmark-icon-size);
+}
+
+/* Punk/gothic folder: torn metal folder silhouette with a dark-red scar. */
+.bookmark-folder-icon {
+  position: relative;
+  width: calc(var(--bookmark-icon-size) + 2px);
+  height: calc(var(--bookmark-icon-size) * 0.78);
+  flex: 0 0 calc(var(--bookmark-icon-size) + 2px);
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(145deg, rgba(245,245,247,0.96), rgba(132,132,142,0.90));
+  clip-path: polygon(0 26%, 29% 26%, 36% 5%, 67% 5%, 75% 26%, 100% 26%, 95% 94%, 7% 94%);
+  transform: rotate(-2deg) skewX(-3deg);
+  filter: drop-shadow(0 0 2px rgba(255,255,255,0.18));
+}
+
+.bookmark-folder-icon::before {
+  content: "";
+  position: absolute;
+  inset: 3px 3px 3px 3px;
+  background: linear-gradient(145deg, #151518, #09090b);
+  clip-path: polygon(0 28%, 30% 28%, 37% 5%, 66% 5%, 74% 28%, 100% 28%, 94% 92%, 7% 92%);
+}
+
+.bookmark-folder-icon::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 4px;
+  width: 2px;
+  height: calc(100% - 2px);
+  background: var(--accent);
+  transform: rotate(24deg);
+  box-shadow: -4px 1px 0 rgba(255,255,255,0.28);
+  opacity: 0.95;
+}
+
+/* Show at most eight bookmark rows at once; additional rows are scrollable. */
+.bookmark-menu {
+  max-height: 304px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--accent-rgb), 0.92) rgba(255, 255, 255, 0.06);
+}
+
+.bookmark-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bookmark-menu::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.bookmark-menu::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.95), rgba(120,120,128,0.72));
+  border: 2px solid rgba(10,10,12,0.82);
+  border-radius: 10px;
+}
+
+.bookmark-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--accent-rgb), 1);
+}
+
+/* Nested folders expand inside the scrollable menu instead of being clipped off-screen. */
+.bookmark-menu .bookmark-folder > .bookmark-menu {
+  position: static;
+  display: none;
+  width: calc(100% - 14px);
+  min-width: 0;
+  max-width: none;
+  margin: 4px 0 5px 14px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  border-color: rgba(255,255,255,0.10);
+  box-shadow: inset 3px 0 0 rgba(var(--accent-rgb), 0.48);
+}
+
+.bookmark-menu .bookmark-folder:hover > .bookmark-menu,
+.bookmark-menu .bookmark-folder:focus-within > .bookmark-menu {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.all-bookmarks-folder > .bookmark-folder-button {
+  border-color: rgba(var(--accent-rgb), 0.66);
+}
+
+.all-bookmarks-folder > .bookmark-folder-button .bookmark-title {
+  font-weight: 700;
+}
+
+/* Icon/padding controls affect both custom bars. */
+.shortcuts-bar {
+  gap: calc(var(--element-padding) + 3px);
+}
+
+.shortcut-tile {
+  width: calc(var(--shortcut-icon-size) + 36px);
+  height: calc(var(--shortcut-icon-size) + 36px);
+  flex-basis: calc(var(--shortcut-icon-size) + 36px);
+  padding: max(5px, calc(var(--element-padding) - 1px));
+}
+
+.shortcut-favicon,
+.favicon-fallback,
+.preview-favicon {
+  width: calc(var(--shortcut-icon-size) + 12px);
+  height: calc(var(--shortcut-icon-size) + 12px);
+}
+
+.shortcut-tile:hover,
+.shortcut-tile:focus-visible,
+.settings-gear:hover,
+.settings-gear:focus-visible {
+  box-shadow:
+    0 0 0 1px rgba(var(--accent-rgb), calc(var(--hover-glow-alpha) * 0.72)),
+    0 0 var(--hover-glow-blur) rgba(var(--accent-rgb), var(--hover-glow-alpha));
+}
+
+.appearance-preview-card {
+  overflow: visible;
+}
+
+.appearance-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.preview-bookmark {
+  width: fit-content;
+  pointer-events: none;
+}
+
+.theme-style-status {
+  margin: 10px 0 0;
+}
+
+@media (max-width: 720px) {
+  .appearance-preview-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+
+/* ===== v1.5: fixed Neon Ruin, wide bookmark bar, Other Bookmarks, manual background ===== */
+.bookmarks-bar {
+  left: 12px;
+  right: 12px;
+  width: auto;
+  max-width: none;
+  transform: translateY(-12px);
+  justify-content: flex-start;
+  align-content: flex-start;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.top-zone:hover .bookmarks-bar,
+.bookmarks-bar:focus-within {
+  transform: translateY(0);
+}
+
+.other-bookmarks-folder > .bookmark-folder-button {
+  border-color: rgba(170, 25, 45, 0.82);
+  background: rgba(80, 7, 18, 0.18);
+}
+
+.other-bookmarks-folder > .bookmark-folder-button .bookmark-folder-icon {
+  background: linear-gradient(145deg, #a41935, #4a0713);
+  filter: drop-shadow(0 0 4px rgba(160, 18, 42, 0.55));
+}
+
+.other-bookmarks-folder > .bookmark-folder-button .bookmark-folder-icon::before {
+  background: linear-gradient(145deg, #25050c, #08080a);
+}
+
+.other-bookmarks-folder > .bookmark-folder-button .bookmark-folder-icon::after {
+  background: rgba(244, 244, 247, 0.92);
+  box-shadow: -4px 1px 0 rgba(140, 18, 38, 0.82);
+}
+
+.other-bookmarks-folder > .bookmark-folder-button .bookmark-title {
+  color: #f3dfe4;
+  font-weight: 700;
+}
+
+.other-bookmarks-folder > .bookmark-menu {
+  left: auto;
+  right: 0;
+}
+
+#manualBackgroundCard {
+  border-color: rgba(255,255,255,0.12);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+#manualBackgroundCard.is-manual-active {
+  border-color: rgba(var(--accent-rgb), 0.58);
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.12), 0 0 18px rgba(var(--accent-rgb), 0.10);
+}
+
+.manual-background-note { justify-content: flex-end; }
+.manual-background-note .secondary-button { width: 100%; }
+
+
+/* ===== v1.6: drag-and-drop bookmarks ===== */
+.bookmark-draggable {
+  cursor: grab;
+  user-select: none;
+}
+
+.bookmark-draggable:active,
+.bookmark-dragging {
+  cursor: grabbing;
+}
+
+.bookmark-dragging {
+  opacity: 0.32 !important;
+  filter: saturate(0.55);
+}
+
+.bookmark-drop-into {
+  border-color: rgba(235, 28, 62, 0.95) !important;
+  background: rgba(120, 8, 28, 0.22) !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.10), 0 0 22px rgba(220, 18, 52, 0.72) !important;
+}
+
+.bookmarks-bar > .bookmark-item > .bookmark-link.bookmark-drop-before,
+.bookmarks-bar > .bookmark-folder > .bookmark-folder-button.bookmark-drop-before {
+  box-shadow: -5px 0 0 rgba(230, 23, 58, 0.95), -8px 0 18px rgba(220, 18, 52, 0.55) !important;
+}
+
+.bookmarks-bar > .bookmark-item > .bookmark-link.bookmark-drop-after,
+.bookmarks-bar > .bookmark-folder > .bookmark-folder-button.bookmark-drop-after {
+  box-shadow: 5px 0 0 rgba(230, 23, 58, 0.95), 8px 0 18px rgba(220, 18, 52, 0.55) !important;
+}
+
+.bookmark-menu .bookmark-drop-before {
+  box-shadow: 0 -4px 0 rgba(230, 23, 58, 0.95), 0 -7px 16px rgba(220, 18, 52, 0.48) !important;
+}
+
+.bookmark-menu .bookmark-drop-after {
+  box-shadow: 0 4px 0 rgba(230, 23, 58, 0.95), 0 7px 16px rgba(220, 18, 52, 0.48) !important;
+}
+
+.bookmark-menu.bookmark-drop-into,
+.bookmarks-bar.bookmark-drop-into {
+  outline: 1px dashed rgba(240, 42, 72, 0.88);
+  outline-offset: -4px;
+}
+
+.bookmark-folder-synthetic > .bookmark-folder-button {
+  cursor: default;
+}
+
+
+/* ===== v1.7: click-to-open bookmark folders + stable drag session ===== */
+/* Folder contents are opened explicitly with one left click, never by hover alone. */
+.bookmark-folder:hover > .bookmark-menu,
+.bookmark-folder:focus-within > .bookmark-menu {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-5px);
+}
+
+.bookmark-folder.is-open > .bookmark-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.bookmark-menu .bookmark-folder:hover > .bookmark-menu,
+.bookmark-menu .bookmark-folder:focus-within > .bookmark-menu {
+  display: none;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+
+.bookmark-menu .bookmark-folder.is-open > .bookmark-menu {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+
+.bookmark-folder.is-open > .bookmark-folder-button {
+  border-color: rgba(var(--accent-rgb), 0.78);
+  background: rgba(var(--accent-rgb), 0.11);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.16), 0 0 13px rgba(var(--accent-rgb), 0.22);
+}
+
+.bookmark-folder.is-open > .bookmark-folder-button .bookmark-chevron {
+  transform: rotate(180deg);
+  color: #f2f2f4;
+}
+
+.bookmark-chevron {
+  transition: transform 140ms ease, color 140ms ease;
+}
+
+/* Native drag can momentarily move the pointer out of the hover zone.
+   Keep the entire bookmark surface fixed and interactive until drop/dragend. */
+body.bookmark-drag-active .bookmarks-bar,
+.bookmarks-bar.bookmark-drag-active {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0) !important;
+}
+
+body.bookmark-drag-active .top-zone {
+  pointer-events: auto;
+}
+
+body.bookmark-drag-active .bookmark-folder.is-open > .bookmark-menu {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+body.bookmark-drag-active .bookmark-menu .bookmark-folder.is-open > .bookmark-menu {
+  display: flex !important;
+}
+
+/* v1.9 — shortcut drag & drop + background carousel */
+.background {
+  transition: opacity 180ms ease;
+}
+
+.background.is-switching {
+  opacity: 0.18;
+}
+
+.carousel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.carousel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.carousel-heading h2,
+.carousel-heading p {
+  margin-bottom: 0;
+}
+
+.toggle-field {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #e9e9ec;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-field input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-track {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #e9e9ec;
+  transition: transform 150ms ease, background 150ms ease;
+}
+
+.toggle-field input:checked + .toggle-track {
+  border-color: rgba(var(--accent-rgb), 0.88);
+  background: rgba(var(--accent-rgb), 0.38);
+  box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.32);
+}
+
+.toggle-field input:checked + .toggle-track::after {
+  transform: translateX(20px);
+  background: #fff;
+}
+
+.carousel-controls {
+  display: grid;
+  grid-template-columns: auto minmax(260px, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.carousel-interval-field {
+  min-width: 0;
+}
+
+.interval-controls {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.45fr) minmax(130px, 0.55fr);
+  gap: 8px;
+}
+
+.interval-controls input[type="number"] {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(5, 5, 7, 0.52);
+  color: var(--text);
+  outline: none;
+}
+
+.interval-controls input[type="number"]:focus {
+  border-color: rgba(var(--accent-rgb), 0.72);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.18);
+}
+
+.carousel-image-list {
+  display: grid;
+  gap: 8px;
+}
+
+.carousel-image-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 11px;
+  background: rgba(255,255,255,0.025);
+}
+
+.carousel-thumb {
+  width: 82px;
+  height: 46px;
+  display: block;
+  object-fit: cover;
+  border-radius: 7px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: #060607;
+}
+
+.carousel-image-meta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.carousel-image-meta strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.carousel-image-meta span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+body.shortcut-drag-active .shortcuts-bar {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translate(-50%, 0) !important;
+}
+
+body.shortcut-drag-active .bottom-zone {
+  pointer-events: auto;
+}
+
+.shortcut-tile {
+  position: relative;
+}
+
+.shortcut-tile.shortcut-drop-before::before,
+.shortcut-tile.shortcut-drop-after::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9);
+}
+
+.shortcut-tile.shortcut-drop-before::before {
+  left: -8px;
+}
+
+.shortcut-tile.shortcut-drop-after::after {
+  right: -8px;
+}
+
+.shortcuts-bar.shortcut-drop-end::after {
+  content: "";
+  width: 3px;
+  height: 46px;
+  flex: 0 0 3px;
+  margin-left: -3px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9);
+}
+
+@media (max-width: 780px) {
+  .carousel-heading {
+    flex-direction: column;
+  }
+
+  .carousel-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* v1.10 — carousel next control + shared vertical center for bottom UI */
+:root {
+  --bottom-ui-center: 55px;
+}
+
+/* Place the shortcut row by its center, not by its bottom edge.
+   This keeps its visual center aligned with the controls even when icon size changes. */
+.shortcuts-bar {
+  bottom: var(--bottom-ui-center);
+  transform: translate(-50%, calc(50% + 14px));
+}
+
+.bottom-zone:hover .shortcuts-bar,
+.shortcuts-bar:focus-within,
+body.shortcut-drag-active .shortcuts-bar {
+  transform: translate(-50%, 50%) !important;
+}
+
+.bottom-actions {
+  position: absolute;
+  right: 24px;
+  bottom: var(--bottom-ui-center);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(calc(50% + 8px));
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.bottom-zone:hover .bottom-actions,
+.bottom-actions:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(50%);
+}
+
+.bottom-control {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 12px;
+  background: rgba(8, 8, 10, var(--panel-alpha));
+  color: #fff;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+/* Override the old absolute positioning; the gear now lives in .bottom-actions. */
+.settings-gear {
+  position: static;
+  right: auto;
+  bottom: auto;
+  opacity: 1;
+  transform: none;
+  font-size: 21px;
+}
+
+.bottom-zone:hover .settings-gear,
+.settings-gear:focus-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.carousel-next-button {
+  font-size: 31px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 300;
+  padding-bottom: 3px;
+}
+
+.carousel-next-button:hover,
+.carousel-next-button:focus-visible,
+.settings-gear:hover,
+.settings-gear:focus-visible {
+  border-color: #fff;
+  background: rgba(var(--accent-rgb), 0.18);
+  box-shadow:
+    0 0 0 1px rgba(var(--accent-rgb), calc(var(--hover-glow-alpha) * 0.72)),
+    0 0 var(--hover-glow-blur) rgba(var(--accent-rgb), var(--hover-glow-alpha));
+  outline: none;
+}
+
+.carousel-next-button:disabled {
+  cursor: default;
+  opacity: 0.34;
+  box-shadow: none;
+}
+
+.carousel-next-button[hidden] {
+  display: none !important;
+}
+
+
+/* v1.11 — previous carousel control */
+.carousel-nav-button {
+  font-size: 31px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 300;
+}
+
+.carousel-prev-button {
+  padding-bottom: 3px;
+}
+
+.carousel-next-button {
+  padding-bottom: 3px;
+}
+
+.carousel-prev-button:disabled,
+.carousel-next-button:disabled {
+  cursor: default;
+  opacity: 0.34;
+  box-shadow: none;
+}
+
+.carousel-prev-button[hidden],
+.carousel-next-button[hidden] {
+  display: none !important;
+}
+
+
+/* v1.12 — keep top-level bookmark dropdowns inside the viewport */
+.bookmarks-bar > .bookmark-folder > .bookmark-menu {
+  max-width: min(360px, calc(100vw - 16px));
+}
+
+
+/* v1.13 — responsive multi-row shortcuts without overlapping bottom controls */
+:root {
+  --shortcut-safe-width: min(82vw, 1500px);
+  --shortcut-row-bottom: 28px;
+}
+
+.shortcuts-bar {
+  width: var(--shortcut-safe-width);
+  max-width: var(--shortcut-safe-width);
+  min-height: 0;
+  bottom: var(--shortcut-row-bottom);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-end;
+  justify-content: center;
+  column-gap: calc(var(--element-padding) + 3px);
+  row-gap: calc(var(--element-padding) + 3px);
+  transform: translate(-50%, 14px);
+  max-height: calc(100vh - 140px);
+  overflow-x: visible;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--accent-rgb), 0.72) rgba(255,255,255,0.06);
+}
+
+.bottom-zone:hover .shortcuts-bar,
+.shortcuts-bar:focus-within,
+body.shortcut-drag-active .shortcuts-bar {
+  transform: translate(-50%, 0) !important;
+}
+
+.shortcuts-bar::-webkit-scrollbar {
+  width: 7px;
+}
+
+.shortcuts-bar::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 999px;
+}
+
+.shortcuts-bar::-webkit-scrollbar-thumb {
+  background: rgba(var(--accent-rgb), 0.72);
+  border-radius: 999px;
+}
+
+
+
+/* v1.14 — hover-safe shortcut zone */
+:root {
+  /* Extra space around shortcut tiles so scale/translate and neon glow are never clipped. */
+  --shortcut-hover-safe: calc(var(--hover-glow-blur) + 8px);
+}
+
+.shortcuts-bar {
+  /* Keep the visible bottom row at the same height while enlarging the clipping/scroll area. */
+  bottom: calc(var(--shortcut-row-bottom) - var(--shortcut-hover-safe));
+  padding: var(--shortcut-hover-safe);
+  scroll-padding: var(--shortcut-hover-safe);
+}
+
+/* Ensure the hover animation itself has room on every side. */
+.shortcut-tile:hover,
+.shortcut-tile:focus-visible {
+  position: relative;
+  z-index: 3;
+}
+
+
+/* v1.16 — independent shortcut tile size and outline controls */
+:root {
+  --shortcut-tile-size: 54px;
+  --shortcut-border-width: 1px;
+}
+
+.shortcut-tile {
+  width: var(--shortcut-tile-size);
+  height: var(--shortcut-tile-size);
+  flex: 0 0 var(--shortcut-tile-size);
+  border-width: var(--shortcut-border-width);
+  padding: clamp(5px, calc(var(--shortcut-tile-size) * 0.16), 16px);
+}
+
+.shortcut-favicon,
+.shortcut-favicon.favicon-fallback {
+  width: min(var(--shortcut-icon-size), calc(var(--shortcut-tile-size) - 10px));
+  height: min(var(--shortcut-icon-size), calc(var(--shortcut-tile-size) - 10px));
+}
+
+.preview-tile {
+  width: var(--shortcut-tile-size);
+  height: var(--shortcut-tile-size);
+  border-width: var(--shortcut-border-width);
+}
+
+
+/* v1.19 — separate hover intensity/color + independent border colors */
+:root {
+  --bookmark-border-color: #ffffff;
+  --shortcut-border-color: #ffffff;
+  --hover-glow-color: #c91e3c;
+  --hover-glow-rgb: 201, 30, 60;
+  --bookmark-hover-glow-alpha: 0.70;
+  --bookmark-hover-glow-blur: 30px;
+  --shortcut-hover-glow-alpha: 0.80;
+  --shortcut-hover-glow-blur: 35px;
+}
+
+.bookmark-link,
+.bookmark-folder-button {
+  border-color: var(--bookmark-border-color) !important;
+}
+
+.shortcut-tile,
+.preview-tile {
+  border-color: var(--shortcut-border-color) !important;
+}
+
+.bookmark-link:hover,
+.bookmark-link:focus-visible,
+.bookmark-folder.is-open > .bookmark-folder-button,
+.bookmark-folder-button:hover,
+.bookmark-folder-button:focus-visible {
+  border-color: var(--bookmark-border-color) !important;
+  box-shadow:
+    0 0 0 1px rgba(var(--hover-glow-rgb), calc(var(--bookmark-hover-glow-alpha) * 0.92)),
+    0 0 calc(var(--bookmark-hover-glow-blur) * 0.50) rgba(var(--hover-glow-rgb), var(--bookmark-hover-glow-alpha)),
+    0 0 var(--bookmark-hover-glow-blur) rgba(var(--hover-glow-rgb), calc(var(--bookmark-hover-glow-alpha) * 0.72)),
+    inset 0 0 8px rgba(var(--hover-glow-rgb), calc(var(--bookmark-hover-glow-alpha) * 0.22));
+}
+
+.bookmark-link:hover .bookmark-favicon,
+.bookmark-link:focus-visible .bookmark-favicon,
+.bookmark-folder-button:hover .bookmark-folder-icon,
+.bookmark-folder-button:focus-visible .bookmark-folder-icon,
+.bookmark-folder.is-open > .bookmark-folder-button .bookmark-folder-icon {
+  filter: drop-shadow(0 0 4px rgba(var(--hover-glow-rgb), var(--bookmark-hover-glow-alpha)))
+          drop-shadow(0 0 8px rgba(var(--hover-glow-rgb), calc(var(--bookmark-hover-glow-alpha) * 0.70)));
+}
+
+.shortcut-tile:hover,
+.shortcut-tile:focus-visible {
+  border-color: var(--shortcut-border-color) !important;
+  box-shadow:
+    0 0 0 1px rgba(var(--hover-glow-rgb), calc(var(--shortcut-hover-glow-alpha) * 0.95)),
+    0 0 calc(var(--shortcut-hover-glow-blur) * 0.52) rgba(var(--hover-glow-rgb), var(--shortcut-hover-glow-alpha)),
+    0 0 var(--shortcut-hover-glow-blur) rgba(var(--hover-glow-rgb), calc(var(--shortcut-hover-glow-alpha) * 0.78)),
+    inset 0 0 10px rgba(var(--hover-glow-rgb), calc(var(--shortcut-hover-glow-alpha) * 0.18));
+}
+
+.shortcut-tile:hover .shortcut-favicon,
+.shortcut-tile:focus-visible .shortcut-favicon,
+.shortcut-tile:hover .favicon-fallback,
+.shortcut-tile:focus-visible .favicon-fallback {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 5px rgba(var(--hover-glow-rgb), var(--shortcut-hover-glow-alpha)))
+          drop-shadow(0 0 10px rgba(var(--hover-glow-rgb), calc(var(--shortcut-hover-glow-alpha) * 0.72)));
+  transition: transform 150ms ease, filter 150ms ease;
+}
+
+/* All bottom controls use the selected hover color; explicitly include PREVIOUS arrow. */
+.carousel-prev-button:hover,
+.carousel-prev-button:focus-visible,
+.carousel-next-button:hover,
+.carousel-next-button:focus-visible,
+.settings-gear:hover,
+.settings-gear:focus-visible {
+  border-color: #fff;
+  background: rgba(var(--hover-glow-rgb), 0.20);
+  box-shadow:
+    0 0 0 1px rgba(var(--hover-glow-rgb), calc(var(--shortcut-hover-glow-alpha) * 0.80)),
+    0 0 var(--shortcut-hover-glow-blur) rgba(var(--hover-glow-rgb), var(--shortcut-hover-glow-alpha));
+  outline: none;
+}
+
+.carousel-prev-button:not(:disabled):hover,
+.carousel-next-button:not(:disabled):hover {
+  transform: scale(1.06);
+}
+
+/* v1.19 specificity fixes */
+.bookmark-folder:hover > .bookmark-folder-button,
+.bookmark-folder.is-open > .bookmark-folder-button {
+  box-shadow:
+    0 0 0 1px rgba(var(--hover-glow-rgb), calc(var(--bookmark-hover-glow-alpha) * 0.92)),
+    0 0 calc(var(--bookmark-hover-glow-blur) * 0.50) rgba(var(--hover-glow-rgb), var(--bookmark-hover-glow-alpha)),
+    0 0 var(--bookmark-hover-glow-blur) rgba(var(--hover-glow-rgb), calc(var(--bookmark-hover-glow-alpha) * 0.72)),
+    inset 0 0 8px rgba(var(--hover-glow-rgb), calc(var(--bookmark-hover-glow-alpha) * 0.22));
+}
+
+.bookmark-folder:hover > .bookmark-folder-button .bookmark-folder-icon,
+.bookmark-folder.is-open > .bookmark-folder-button .bookmark-folder-icon {
+  filter: drop-shadow(0 0 4px rgba(var(--hover-glow-rgb), var(--bookmark-hover-glow-alpha)))
+          drop-shadow(0 0 8px rgba(var(--hover-glow-rgb), calc(var(--bookmark-hover-glow-alpha) * 0.70)));
+}
+
+.shortcut-favicon,
+.shortcut-favicon.favicon-fallback,
+.bookmark-favicon,
+.bookmark-folder-icon {
+  transition: transform 150ms ease, filter 150ms ease;
+}
+
+
+/* v1.20 — independent icon sizing for bookmarks and shortcuts */
+.bookmark-favicon,
+.bookmark-favicon.favicon-fallback,
+.bookmark-editor-icon .row-favicon {
+  width: var(--bookmark-icon-size) !important;
+  height: var(--bookmark-icon-size) !important;
+  flex-basis: var(--bookmark-icon-size) !important;
+}
+
+.bookmark-folder-icon {
+  width: calc(var(--bookmark-icon-size) + 2px) !important;
+  height: calc(var(--bookmark-icon-size) * 0.78) !important;
+  flex: 0 0 calc(var(--bookmark-icon-size) + 2px) !important;
+}
+
+.shortcut-favicon,
+.shortcut-favicon.favicon-fallback,
+.shortcut-tile .favicon-fallback,
+.preview-favicon {
+  width: min(var(--shortcut-icon-size), calc(var(--shortcut-tile-size) - 10px)) !important;
+  height: min(var(--shortcut-icon-size), calc(var(--shortcut-tile-size) - 10px)) !important;
+}
